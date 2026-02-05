@@ -2,39 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Gaming Assistant 🎮</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Verse - Your AI Sidekick 🤖</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <h1>🎮 AI Gaming Assistant</h1>
-            <p class="subtitle">Your intelligent companion for gaming success</p>
+            <h1>🤖 Verse</h1>
+            <p class="subtitle">Your AI sidekick for gaming, work & life</p>
         </header>
-
-        <!-- Game Selection -->
-        <div class="game-selector">
-            <label for="game-select">Current Game:</label>
-            <select id="game-select">
-                <option value="general">General Gaming</option>
-                <option value="minecraft">Minecraft</option>
-                <option value="league-of-legends">League of Legends</option>
-                <option value="valorant">Valorant</option>
-                <option value="counter-strike">Counter-Strike</option>
-                <option value="dota-2">Dota 2</option>
-                <option value="fortnite">Fortnite</option>
-                <option value="apex-legends">Apex Legends</option>
-                <option value="overwatch">Overwatch</option>
-                <option value="hearthstone">Hearthstone</option>
-                <option value="world-of-warcraft">World of Warcraft</option>
-                <option value="elden-ring">Elden Ring</option>
-                <option value="dark-souls">Dark Souls</option>
-                <option value="baldurs-gate-3">Baldur's Gate 3</option>
-                <option value="other">Other</option>
-            </select>
-        </div>
 
         <!-- Status Indicator -->
         <div id="status" class="status">
@@ -45,16 +23,13 @@
         <!-- Chat Container -->
         <div class="chat-container" id="chat-container">
             <div class="welcome-message">
-                <h2>👋 Welcome, Gamer!</h2>
-                <p>I'm your AI gaming assistant. Ask me anything about games, strategies, tips, or mechanics!</p>
+                <h2>👋 Hey there!</h2>
+                <p>I'm Verse, your AI sidekick. I can help you with:</p>
                 <div class="example-questions">
-                    <h3>Try asking:</h3>
-                    <ul>
-                        <li>"What's the best early game strategy?"</li>
-                        <li>"How can I improve my aim?"</li>
-                        <li>"What are good beginner tips?"</li>
-                        <li>"How do I counter [enemy/mechanic]?"</li>
-                    </ul>
+                    <div class="use-case">🎮 Gaming tips & strategies</div>
+                    <div class="use-case">💼 Work & study assistance</div>
+                    <div class="use-case">🎙️ Voice chat (hands-free)</div>
+                    <div class="use-case">🧠 Remember things you tell me</div>
                 </div>
             </div>
         </div>
@@ -64,28 +39,28 @@
             <div class="input-wrapper">
                 <textarea 
                     id="user-input" 
-                    placeholder="Ask me anything about gaming..."
+                    placeholder="Ask me anything..."
                     rows="2"
                 ></textarea>
-                <button id="send-btn" class="send-btn">
-                    <span>Send</span>
-                    <span class="shortcut">Enter</span>
+                <button id="send-btn" class="send-btn" title="Send message">
+                    ✈️
                 </button>
             </div>
             <div class="input-controls">
-                <button id="voice-btn" class="voice-btn" title="Voice input (coming soon)">
-                    🎤 Voice
+                <button id="voice-btn" class="control-btn" title="Voice input">
+                    <span id="voice-icon">🎤</span>
+                    <span class="btn-label">Voice</span>
                 </button>
-                <button id="clear-btn" class="clear-btn" title="Clear chat history">
-                    🗑️ Clear
+                <button id="speak-btn" class="control-btn" title="Toggle speech output">
+                    <span id="speak-icon">🔊</span>
+                    <span class="btn-label">Speak</span>
+                </button>
+                <button id="clear-btn" class="control-btn" title="Clear chat">
+                    <span>🗑️</span>
+                    <span class="btn-label">Clear</span>
                 </button>
             </div>
         </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>Powered by OpenAI | Built with ❤️ for gamers</p>
-        </footer>
     </div>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>

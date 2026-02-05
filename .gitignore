@@ -56,3 +56,7 @@ logs/
 *.tmp
 temp/
 tmp/
+
+# Verse - User Memory (local storage)
+user_memory/
+*.json
