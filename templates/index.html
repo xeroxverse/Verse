@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Gaming Assistant 🎮</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎮 AI Gaming Assistant</h1>
+            <p class="subtitle">Your intelligent companion for gaming success</p>
+        </header>
+
+        <!-- Game Selection -->
+        <div class="game-selector">
+            <label for="game-select">Current Game:</label>
+            <select id="game-select">
+                <option value="general">General Gaming</option>
+                <option value="minecraft">Minecraft</option>
+                <option value="league-of-legends">League of Legends</option>
+                <option value="valorant">Valorant</option>
+                <option value="counter-strike">Counter-Strike</option>
+                <option value="dota-2">Dota 2</option>
+                <option value="fortnite">Fortnite</option>
+                <option value="apex-legends">Apex Legends</option>
+                <option value="overwatch">Overwatch</option>
+                <option value="hearthstone">Hearthstone</option>
+                <option value="world-of-warcraft">World of Warcraft</option>
+                <option value="elden-ring">Elden Ring</option>
+                <option value="dark-souls">Dark Souls</option>
+                <option value="baldurs-gate-3">Baldur's Gate 3</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <!-- Status Indicator -->
+        <div id="status" class="status">
+            <span class="status-dot"></span>
+            <span id="status-text">Checking status...</span>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chat-container">
+            <div class="welcome-message">
+                <h2>👋 Welcome, Gamer!</h2>
+                <p>I'm your AI gaming assistant. Ask me anything about games, strategies, tips, or mechanics!</p>
+                <div class="example-questions">
+                    <h3>Try asking:</h3>
+                    <ul>
+                        <li>"What's the best early game strategy?"</li>
+                        <li>"How can I improve my aim?"</li>
+                        <li>"What are good beginner tips?"</li>
+                        <li>"How do I counter [enemy/mechanic]?"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-wrapper">
+                <textarea 
+                    id="user-input" 
+                    placeholder="Ask me anything about gaming..."
+                    rows="2"
+                ></textarea>
+                <button id="send-btn" class="send-btn">
+                    <span>Send</span>
+                    <span class="shortcut">Enter</span>
+                </button>
+            </div>
+            <div class="input-controls">
+                <button id="voice-btn" class="voice-btn" title="Voice input (coming soon)">
+                    🎤 Voice
+                </button>
+                <button id="clear-btn" class="clear-btn" title="Clear chat history">
+                    🗑️ Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by OpenAI | Built with ❤️ for gamers</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
