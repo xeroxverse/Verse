@@ -1,4 +1,4 @@
-/* AI Gaming Assistant Styles */
+/* Verse AI Sidekick - Mobile-First Styles */
 
 :root {
     --primary-color: #6366f1;
@@ -21,98 +21,61 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background: linear-gradient(135deg, var(--background) 0%, #1a202c 100%);
     color: var(--text-primary);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 0;
+    overflow: hidden;
 }
 
 .container {
     width: 100%;
-    max-width: 900px;
+    max-width: 100vw;
     background: var(--surface);
-    border-radius: 20px;
-    box-shadow: 0 20px 60px var(--shadow);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: 90vh;
-    max-height: 800px;
+    height: 100vh;
+    overflow: hidden;
 }
 
-/* Header */
+/* Header - Compact for mobile */
 .header {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    padding: 30px;
+    padding: 15px 20px;
     text-align: center;
-    border-bottom: 3px solid var(--border);
+    flex-shrink: 0;
 }
 
 .header h1 {
-    font-size: 2rem;
-    margin-bottom: 8px;
+    font-size: 1.5rem;
+    margin-bottom: 4px;
     font-weight: 700;
 }
 
 .subtitle {
     color: rgba(255, 255, 255, 0.9);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
-/* Game Selector */
-.game-selector {
-    padding: 20px;
-    background: var(--surface-light);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.game-selector label {
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.game-selector select {
-    flex: 1;
-    padding: 10px 15px;
-    background: var(--surface);
-    color: var(--text-primary);
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: border-color 0.3s;
-}
-
-.game-selector select:hover {
-    border-color: var(--primary-color);
-}
-
-.game-selector select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-
-/* Status */
+/* Status - Minimal */
 .status {
-    padding: 12px 20px;
+    padding: 10px 20px;
     background: var(--surface-light);
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    flex-shrink: 0;
 }
 
 .status-dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--text-secondary);
     animation: pulse 2s infinite;
@@ -132,83 +95,72 @@ body {
     50% { opacity: 0.5; }
 }
 
-/* Chat Container */
+/* Chat Container - Takes most space */
 .chat-container {
     flex: 1;
     overflow-y: auto;
-    padding: 20px;
+    overflow-x: hidden;
+    padding: 15px;
     background: var(--surface);
+    -webkit-overflow-scrolling: touch;
 }
 
 .chat-container::-webkit-scrollbar {
-    width: 8px;
+    width: 4px;
 }
 
 .chat-container::-webkit-scrollbar-track {
-    background: var(--surface);
+    background: transparent;
 }
 
 .chat-container::-webkit-scrollbar-thumb {
     background: var(--border);
-    border-radius: 4px;
-}
-
-.chat-container::-webkit-scrollbar-thumb:hover {
-    background: var(--surface-light);
+    border-radius: 2px;
 }
 
 /* Welcome Message */
 .welcome-message {
     text-align: center;
-    padding: 40px 20px;
+    padding: 30px 15px;
     color: var(--text-secondary);
 }
 
 .welcome-message h2 {
     color: var(--text-primary);
     margin-bottom: 15px;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
 }
 
 .welcome-message p {
-    margin-bottom: 30px;
-    font-size: 1.1rem;
+    margin-bottom: 20px;
+    font-size: 1rem;
 }
 
 .example-questions {
     background: var(--surface-light);
-    padding: 25px;
+    padding: 20px;
     border-radius: 12px;
     text-align: left;
-    max-width: 500px;
+    max-width: 400px;
     margin: 0 auto;
 }
 
-.example-questions h3 {
+.use-case {
+    padding: 10px 0;
     color: var(--text-primary);
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-}
-
-.example-questions ul {
-    list-style: none;
-}
-
-.example-questions li {
-    padding: 8px 0;
-    color: var(--text-secondary);
     font-size: 0.95rem;
+    border-bottom: 1px solid var(--border);
 }
 
-.example-questions li:before {
-    content: "💡 ";
-    margin-right: 8px;
+.use-case:last-child {
+    border-bottom: none;
 }
 
-/* Chat Messages */
+/* Chat Messages - Mobile optimized */
 .message {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     animation: fadeIn 0.3s;
+    max-width: 100%;
 }
 
 @keyframes fadeIn {
@@ -217,10 +169,12 @@ body {
 }
 
 .message-content {
-    padding: 15px 20px;
+    padding: 12px 16px;
     border-radius: 12px;
-    max-width: 80%;
-    line-height: 1.6;
+    max-width: 85%;
+    line-height: 1.5;
+    word-wrap: break-word;
+    font-size: 0.95rem;
 }
 
 .message.user {
@@ -247,9 +201,9 @@ body {
 }
 
 .message-time {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
-    margin-top: 5px;
+    margin-top: 4px;
     padding: 0 5px;
 }
 
@@ -260,7 +214,7 @@ body {
 /* Loading indicator */
 .loading {
     display: inline-block;
-    padding: 15px 20px;
+    padding: 12px 16px;
     background: var(--surface-light);
     border-radius: 12px;
     color: var(--text-secondary);
@@ -277,30 +231,33 @@ body {
     60%, 100% { content: '...'; }
 }
 
-/* Input Area */
+/* Input Area - Fixed at bottom, mobile-friendly */
 .input-area {
-    padding: 20px;
+    padding: 15px;
     background: var(--surface-light);
     border-top: 1px solid var(--border);
+    flex-shrink: 0;
 }
 
 .input-wrapper {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
+    align-items: flex-end;
 }
 
 #user-input {
     flex: 1;
-    padding: 15px;
+    padding: 12px 15px;
     background: var(--surface);
     color: var(--text-primary);
     border: 2px solid var(--border);
     border-radius: 12px;
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-family: inherit;
     resize: none;
     transition: border-color 0.3s;
+    max-height: 120px;
 }
 
 #user-input:focus {
@@ -313,28 +270,26 @@ body {
 }
 
 .send-btn {
-    padding: 15px 30px;
+    padding: 12px 20px;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 1.4rem;
+    transition: transform 0.2s;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    min-width: 60px;
 }
 
 .send-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    transform: scale(1.05);
 }
 
 .send-btn:active {
-    transform: translateY(0);
+    transform: scale(0.95);
 }
 
 .send-btn:disabled {
@@ -343,65 +298,130 @@ body {
     transform: none;
 }
 
-.shortcut {
-    font-size: 0.7rem;
-    opacity: 0.8;
-}
-
+/* Control buttons - Touch-friendly */
 .input-controls {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    justify-content: space-between;
 }
 
-.voice-btn,
-.clear-btn {
-    padding: 10px 20px;
+.control-btn {
+    flex: 1;
+    padding: 10px 8px;
     background: var(--surface);
     color: var(--text-primary);
     border: 2px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-height: 60px;
 }
 
-.voice-btn:hover,
-.clear-btn:hover {
+.control-btn:hover {
     background: var(--surface-light);
     border-color: var(--primary-color);
 }
 
-/* Footer */
-.footer {
-    padding: 15px;
-    text-align: center;
-    background: var(--background);
-    border-top: 1px solid var(--border);
-    color: var(--text-secondary);
-    font-size: 0.85rem;
+.control-btn:active {
+    transform: scale(0.95);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+.control-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.control-btn span {
+    font-size: 1.2rem;
+}
+
+.btn-label {
+    font-size: 0.75rem !important;
+    opacity: 0.8;
+}
+
+/* Voice recording indicator */
+.control-btn.recording {
+    background: var(--error);
+    border-color: var(--error);
+    color: white;
+    animation: recordPulse 1s infinite;
+}
+
+@keyframes recordPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Desktop adjustments */
+@media (min-width: 769px) {
+    body {
+        padding: 20px;
+    }
+    
     .container {
-        height: 100vh;
-        max-height: none;
-        border-radius: 0;
+        max-width: 900px;
+        height: 90vh;
+        max-height: 800px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px var(--shadow);
     }
-
+    
+    .header {
+        padding: 25px;
+        border-radius: 20px 20px 0 0;
+    }
+    
     .header h1 {
-        font-size: 1.5rem;
+        font-size: 2rem;
     }
-
+    
+    .subtitle {
+        font-size: 0.95rem;
+    }
+    
     .message-content {
-        max-width: 90%;
+        max-width: 80%;
     }
-
-    .send-btn {
-        padding: 15px 20px;
+    
+    .control-btn {
+        flex-direction: row;
+        gap: 8px;
+        min-height: auto;
+        padding: 10px 15px;
     }
+}
 
-    .shortcut {
-        display: none;
+/* Landscape mode on mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+    .header {
+        padding: 10px 20px;
+    }
+    
+    .header h1 {
+        font-size: 1.2rem;
+    }
+    
+    .subtitle {
+        font-size: 0.75rem;
+    }
+    
+    .status {
+        padding: 8px 20px;
+        font-size: 0.75rem;
+    }
+    
+    .chat-container {
+        padding: 10px;
+    }
+    
+    .input-area {
+        padding: 10px;
     }
 }

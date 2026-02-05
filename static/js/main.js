@@ -1,7 +1,11 @@
-// AI Gaming Assistant - Frontend JavaScript
+// Verse AI Sidekick - Frontend JavaScript with Voice Support
 
 let sessionId = generateSessionId();
 let isLoading = false;
+let isSpeechEnabled = false;
+let recognition = null;
+let synthesis = window.speechSynthesis;
+let isListening = false;
 
 // Generate unique session ID
 function generateSessionId() {
@@ -12,9 +16,9 @@ function generateSessionId() {
 const chatContainer = document.getElementById('chat-container');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
-const gameSelect = document.getElementById('game-select');
 const clearBtn = document.getElementById('clear-btn');
 const voiceBtn = document.getElementById('voice-btn');
+const speakBtn = document.getElementById('speak-btn');
 const statusElement = document.getElementById('status');
 const statusText = document.getElementById('status-text');
 
@@ -22,6 +26,7 @@ const statusText = document.getElementById('status-text');
 document.addEventListener('DOMContentLoaded', () => {
     checkHealth();
     setupEventListeners();
+    setupVoiceRecognition();
     userInput.focus();
 });
 
@@ -29,6 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEventListeners() {
     sendBtn.addEventListener('click', sendMessage);
     clearBtn.addEventListener('click', clearChat);
+    voiceBtn.addEventListener('click', toggleVoiceInput);
+    speakBtn.addEventListener('click', toggleSpeechOutput);
     
     userInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -40,13 +47,123 @@ function setupEventListeners() {
     // Auto-resize textarea
     userInput.addEventListener('input', () => {
         userInput.style.height = 'auto';
-        userInput.style.height = Math.min(userInput.scrollHeight, 150) + 'px';
+        userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px';
     });
+}
 
-    // Voice button (placeholder)
-    voiceBtn.addEventListener('click', () => {
-        alert('Voice input feature coming soon! 🎤');
-    });
+// Voice Recognition Setup
+function setupVoiceRecognition() {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+        
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            userInput.value = transcript;
+            userInput.style.height = 'auto';
+            userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px';
+            sendMessage();
+        };
+        
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            stopVoiceInput();
+            if (event.error !== 'no-speech' && event.error !== 'aborted') {
+                addSystemMessage('Voice input error. Please try again or type your message.');
+            }
+        };
+        
+        recognition.onend = () => {
+            stopVoiceInput();
+        };
+    } else {
+        console.log('Speech recognition not supported');
+        voiceBtn.style.opacity = '0.5';
+        voiceBtn.title = 'Voice input not supported in your browser';
+    }
+}
+
+// Toggle Voice Input
+function toggleVoiceInput() {
+    if (!recognition) {
+        addSystemMessage('Voice input is not supported in your browser. Please use Chrome, Edge, or Safari.');
+        return;
+    }
+    
+    if (isListening) {
+        stopVoiceInput();
+    } else {
+        startVoiceInput();
+    }
+}
+
+// Start Voice Input
+function startVoiceInput() {
+    try {
+        recognition.start();
+        isListening = true;
+        voiceBtn.classList.add('recording');
+        document.getElementById('voice-icon').textContent = '🔴';
+        userInput.placeholder = 'Listening...';
+    } catch (error) {
+        console.error('Error starting voice recognition:', error);
+        addSystemMessage('Could not start voice input. Please try again.');
+    }
+}
+
+// Stop Voice Input
+function stopVoiceInput() {
+    if (recognition && isListening) {
+        try {
+            recognition.stop();
+        } catch (error) {
+            console.error('Error stopping recognition:', error);
+        }
+    }
+    isListening = false;
+    voiceBtn.classList.remove('recording');
+    document.getElementById('voice-icon').textContent = '🎤';
+    userInput.placeholder = 'Ask me anything...';
+}
+
+// Toggle Speech Output
+function toggleSpeechOutput() {
+    isSpeechEnabled = !isSpeechEnabled;
+    
+    if (isSpeechEnabled) {
+        speakBtn.classList.add('active');
+        document.getElementById('speak-icon').textContent = '🔊';
+        addSystemMessage('Speech output enabled. I\'ll read my responses to you.');
+    } else {
+        speakBtn.classList.remove('active');
+        document.getElementById('speak-icon').textContent = '🔇';
+        if (synthesis.speaking) {
+            synthesis.cancel();
+        }
+    }
+}
+
+// Speak Text
+function speakText(text) {
+    if (!isSpeechEnabled || !synthesis) return;
+    
+    // Cancel any ongoing speech
+    if (synthesis.speaking) {
+        synthesis.cancel();
+    }
+    
+    // Clean text for speech (remove emojis and special formatting)
+    const cleanText = text.replace(/[🎮💼🎙️🧠✨🔥💡⚡🎯❌⚠️⏳⏱️]/g, '').trim();
+    
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    synthesis.speak(utterance);
 }
 
 // Check API health
@@ -56,9 +173,9 @@ async function checkHealth() {
         const data = await response.json();
         
         if (data.status === 'healthy' && data.assistant_ready) {
-            updateStatus('online', 'AI Assistant Ready');
+            updateStatus('online', 'Verse Ready');
         } else {
-            updateStatus('error', 'AI Assistant Not Configured');
+            updateStatus('error', 'AI Not Configured');
         }
     } catch (error) {
         console.error('Health check failed:', error);
@@ -77,6 +194,11 @@ async function sendMessage() {
     const message = userInput.value.trim();
     
     if (!message || isLoading) return;
+    
+    // Stop any voice input
+    if (isListening) {
+        stopVoiceInput();
+    }
     
     // Add user message to chat
     addMessage('user', message);
@@ -98,7 +220,7 @@ async function sendMessage() {
             },
             body: JSON.stringify({
                 message: message,
-                game: gameSelect.value,
+                game: 'general',
                 session_id: sessionId
             })
         });
@@ -110,6 +232,9 @@ async function sendMessage() {
         
         if (data.success) {
             addMessage('assistant', data.response);
+            
+            // Speak the response if enabled
+            speakText(data.response);
         } else {
             addMessage('assistant', `Error: ${data.error || 'Unknown error occurred'}`);
         }
@@ -117,7 +242,7 @@ async function sendMessage() {
     } catch (error) {
         console.error('Error sending message:', error);
         loadingElement.remove();
-        addMessage('assistant', '❌ Failed to connect to the assistant. Please check your connection and try again.');
+        addMessage('assistant', '❌ Connection error. Please check your connection and try again.');
     } finally {
         isLoading = false;
         sendBtn.disabled = false;
@@ -154,6 +279,25 @@ function addMessage(role, content) {
     return messageDiv;
 }
 
+// Add system message
+function addSystemMessage(content) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message assistant';
+    messageDiv.style.opacity = '0.8';
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.textContent = '💡 ' + content;
+    
+    messageDiv.appendChild(contentDiv);
+    chatContainer.appendChild(messageDiv);
+    
+    // Scroll to bottom
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    
+    return messageDiv;
+}
+
 // Add loading message
 function addLoadingMessage() {
     const messageDiv = document.createElement('div');
@@ -173,8 +317,13 @@ function addLoadingMessage() {
 
 // Clear chat history
 async function clearChat() {
-    if (!confirm('Are you sure you want to clear the chat history?')) {
+    if (!confirm('Clear chat history?')) {
         return;
+    }
+    
+    // Stop any ongoing speech
+    if (synthesis.speaking) {
+        synthesis.cancel();
     }
     
     try {
@@ -191,8 +340,8 @@ async function clearChat() {
         // Clear chat container
         chatContainer.innerHTML = `
             <div class="welcome-message">
-                <h2>👋 Welcome back!</h2>
-                <p>Chat history cleared. Ready for new questions!</p>
+                <h2>👋 Chat cleared!</h2>
+                <p>Ready for new questions!</p>
             </div>
         `;
         
@@ -201,41 +350,28 @@ async function clearChat() {
         
     } catch (error) {
         console.error('Error clearing chat:', error);
-        alert('Failed to clear chat history. Please try again.');
+        addSystemMessage('Failed to clear chat. Please try again.');
     }
 }
 
-// Quick tips feature (can be expanded)
-function showQuickTips() {
-    const tips = [
-        "💡 Tip: Be specific about your game and situation for better advice!",
-        "🎯 Tip: Ask about strategies, mechanics, builds, or troubleshooting!",
-        "⚡ Tip: Switch your current game in the dropdown for tailored responses!",
-        "🔥 Tip: You can ask follow-up questions for deeper insights!"
-    ];
-    
-    const randomTip = tips[Math.floor(Math.random() * tips.length)];
-    return randomTip;
-}
-
-// Keyboard shortcuts info
+// Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
+    // Escape to stop voice input
+    if (e.key === 'Escape' && isListening) {
+        e.preventDefault();
+        stopVoiceInput();
+    }
+    
     // Ctrl/Cmd + K to focus input
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         userInput.focus();
     }
-    
-    // Ctrl/Cmd + L to clear chat
-    if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
-        e.preventDefault();
-        clearChat();
-    }
 });
 
-console.log('🎮 AI Gaming Assistant loaded!');
-console.log('💡 Keyboard shortcuts:');
-console.log('   Enter - Send message');
-console.log('   Shift+Enter - New line');
-console.log('   Ctrl/Cmd+K - Focus input');
-console.log('   Ctrl/Cmd+L - Clear chat');
+console.log('🤖 Verse AI Sidekick loaded!');
+console.log('💡 Features:');
+console.log('   🎤 Voice input - Click microphone button');
+console.log('   🔊 Speech output - Click speaker button');
+console.log('   ⌨️  Text chat - Type and press Enter');
+console.log('   🗑️  Clear - Clear conversation history');

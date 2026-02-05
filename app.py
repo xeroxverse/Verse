@@ -44,11 +44,12 @@ def chat():
         if session_id not in conversations:
             conversations[session_id] = []
         
-        # Get response from AI assistant
+        # Get response from AI assistant (with memory)
         response = assistant.get_response(
             user_message, 
             game_context=game_context,
-            conversation_history=conversations[session_id]
+            conversation_history=conversations[session_id],
+            session_id=session_id
         )
         
         # Store conversation
@@ -122,8 +123,66 @@ def health_check():
     })
 
 
+# Memory API Endpoints
+
+@app.route('/api/memory', methods=['GET'])
+def get_memory():
+    """Get memory for a session"""
+    session_id = request.args.get('session_id', 'default')
+    memory = assistant.load_memory(session_id)
+    return jsonify({'memory': memory, 'success': True})
+
+
+@app.route('/api/memory', methods=['POST'])
+def save_memory_data():
+    """Save or update memory for a session"""
+    try:
+        data = request.json
+        session_id = data.get('session_id', 'default')
+        key = data.get('key')
+        value = data.get('value')
+        
+        if not key:
+            return jsonify({'error': 'Key is required'}), 400
+        
+        success = assistant.update_memory(session_id, key, value)
+        
+        return jsonify({
+            'success': success,
+            'message': 'Memory updated successfully' if success else 'Failed to update memory'
+        })
+    except Exception as e:
+        print(f"Error saving memory: {e}")
+        return jsonify({
+            'error': f'An error occurred: {str(e)}',
+            'success': False
+        }), 500
+
+
+@app.route('/api/memory', methods=['DELETE'])
+def delete_memory():
+    """Delete memory for a session"""
+    try:
+        data = request.json
+        session_id = data.get('session_id', 'default')
+        key = data.get('key')  # Optional: specific key to delete
+        
+        success = assistant.forget_memory(session_id, key)
+        
+        return jsonify({
+            'success': success,
+            'message': 'Memory deleted successfully' if success else 'Failed to delete memory'
+        })
+    except Exception as e:
+        print(f"Error deleting memory: {e}")
+        return jsonify({
+            'error': f'An error occurred: {str(e)}',
+            'success': False
+        }), 500
+
+
 if __name__ == '__main__':
-    print("🎮 Starting AI Gaming Assistant...")
+    print("🎮 Starting Verse - Your AI Sidekick...")
     print("🌐 Open your browser and navigate to http://localhost:5000")
-    print("💡 Ask me anything about gaming!")
+    print("💡 Ask me anything about gaming, work, study, or life!")
     app.run(host='0.0.0.0', port=5000, debug=True)
